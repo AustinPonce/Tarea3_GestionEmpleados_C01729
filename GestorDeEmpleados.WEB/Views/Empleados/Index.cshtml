@@ -1,0 +1,160 @@
+﻿@model List<GestorDeEmpleados.Models.Empleado>
+
+@{
+    ViewData["Title"] = "Gestión de Empleados";
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Gestión de Empleados</h2>
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <form method="get" asp-action="Index">
+                <div class="input-group">
+                    <input type="text"
+                           name="busqueda"
+                           value="@ViewBag.Busqueda"
+                           class="form-control"
+                           placeholder="Buscar por nombre, apellido o departamento..." />
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-4 text-end">
+            <a asp-action="Create"
+                   class="btn btn-success">
+                Nuevo Empleado
+            </a>
+        </div>
+    </div>
+
+    <p>
+        <strong>Total encontrados:</strong>
+        @ViewBag.TotalRegistros
+    </p>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Nombre Completo</th>
+                <th>Departamento</th>
+                <th>Salario</th>
+                <th>Fecha Ingreso</th>
+                <th>Estado</th>
+                <th style="width:220px;">Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var empleado in Model)
+            {
+                <tr>
+                    <td>@empleado.Id</td>
+                    <td>@empleado.NombreCompleto</td>
+                    <td>@empleado.Departamento</td>
+                    <td>₡@empleado.Salario.ToString("N0")</td>
+                    <td>@empleado.FechaIngreso.ToShortDateString()</td>
+
+                    <td>
+                        @if (empleado.Activo)
+                        {
+                            <span class="badge bg-success">
+                                Activo
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                Dado de Baja
+                            </span>
+                        }
+                    </td>
+
+                    <td>
+                        <a asp-action="Edit"
+                               asp-route-id="@empleado.Id"
+                               class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
+
+                        <form asp-action="ToggleActivo"
+                              method="post"
+                              style="display:inline;">
+                            <input type="hidden"
+                                   name="id"
+                                   value="@empleado.Id" />
+
+                            @if (empleado.Activo)
+                            {
+                                <button type="submit"
+                                        class="btn btn-danger btn-sm">
+                                    Dar de Baja
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit"
+                                        class="btn btn-success btn-sm">
+                                    Activar
+                                </button>
+                            }
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <div>
+            Página @ViewBag.PaginaActual de @ViewBag.TotalPaginas
+        </div>
+
+        <div>
+
+            @if (ViewBag.PaginaActual > 1)
+            {
+                <a asp-action="Index"
+                       asp-route-busqueda="@ViewBag.Busqueda"
+                       asp-route-pagina="@(ViewBag.PaginaActual - 1)"
+                       class="btn btn-secondary">
+                    Anterior
+                </a>
+            }
+            else
+            {
+                <button class="btn btn-secondary"
+                        disabled>
+                    Anterior
+                </button>
+            }
+
+            @if (ViewBag.PaginaActual < ViewBag.TotalPaginas)
+            {
+                <a asp-action="Index"
+                       asp-route-busqueda="@ViewBag.Busqueda"
+                       asp-route-pagina="@(ViewBag.PaginaActual + 1)"
+                       class="btn btn-secondary">
+                    Siguiente
+                </a>
+            }
+            else
+            {
+                <button class="btn btn-secondary"
+                        disabled>
+                    Siguiente
+                </button>
+            }
+
+        </div>
+    </div>
+
+</div>
