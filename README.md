@@ -1,6 +1,6 @@
 Tarea3_GestionEmpleados_C01729
 
-Nombre: [Tu Nombre]
+Nombre: Austin Carrillo Ponce
 Carnet: C01729
 
 Descripción
